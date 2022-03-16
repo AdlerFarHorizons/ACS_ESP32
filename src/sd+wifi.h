@@ -495,14 +495,6 @@ void sd_setup(){
 }
 
 
-
-//PREPARE DATA
-// void Prepare_Data(){
-//   int r = random(100);
-//   dataString =   String(millis()) + "," + String(sensorReading1) + "," + String(sensorReading2) + "," + String(sensorReading3) + "," + String(r) + "\n";
-//   Serial.println(dataString); //Only to show on the Serial Monitor.
-// }
-
 ///////////////////////////////////////////////////////////////////////////////////////////
 //READ FILE
 void readFile(fs::FS &fs, const char * path){
