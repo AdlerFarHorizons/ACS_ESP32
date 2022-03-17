@@ -64,8 +64,8 @@ IPAddress subnet(255, 255, 255, 0);   // Set your network sub-network mask here
 IPAddress dns(192,168,0,1);           // Set your network DNS usually your Router base address
 
 //Prepare your wifi connection.
-const char ssid_1[]     = "atmosphere";                   //Set your SSID here.
-const char password_1[] = "chalkappleLinuxrescue";        //And wifi password here.
+const char ssid_1[]     = "your_SSID1";                   //Set your SSID here.
+const char password_1[] = "your_PASSWORD_for SSID1";        //And wifi password here.
 const char ssid_2[]     = "your_SSID2";
 const char password_2[] = "your_PASSWORD_for SSID2";
 const char ssid_3[]     = "your_SSID3";
