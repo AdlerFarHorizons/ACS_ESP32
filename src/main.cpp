@@ -171,7 +171,7 @@ void loop(){
   int switchState;
   long int currentTime;
   float currentPressure,currentTemp,currentAltitude,currentDAdt;
-
+  Serial.println(exist);
   // get time
   currentTime=millis()+timeOffset;
   

@@ -64,6 +64,11 @@ IPAddress subnet(255, 255, 255, 0);   // Set your network sub-network mask here
 IPAddress dns(192,168,0,1);           // Set your network DNS usually your Router base address
 
 //Prepare your wifi connection.
+#ifdef ssid.h
+  const char ssid_1[]     = ssid[];
+  const char password_1[] = password[];
+  String exist = "I exist!";
+#else
 const char ssid_1[]     = "your_SSID1";                   //Set your SSID here.
 const char password_1[] = "your_PASSWORD_for SSID1";        //And wifi password here.
 const char ssid_2[]     = "your_SSID2";
@@ -72,6 +77,8 @@ const char ssid_3[]     = "your_SSID3";
 const char password_3[] = "your_PASSWORD_for SSID3";
 const char ssid_4[]     = "your_SSID4";
 const char password_4[] = "your_PASSWORD_for SSID4";
+String exist = "I didn't work";
+#endif
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //WEBPAGE FUNCTION/////////////////////////////////////////////////////////////////////////
