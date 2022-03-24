@@ -16,10 +16,10 @@
 
 // Local Files
 #include "actuator.h"
-#include "Globals.h"
+#include "Globals+switch.h"
 #include "pressure.h"
 #include "sd+wifi.h"
-#include "oled+switch.h"
+#include "oled.h"
 #include "param.h"
 #include "SoftwareFunctions.h"
 #include "temp.h"
@@ -46,6 +46,28 @@ void display_Running_Sketch (void){
 
 void setup() {
   Serial.begin(115200);
+  // if (!WiFi.config(local_IP, gateway, subnet, dns)) { //WiFi.config(ip, gateway, subnet, dns1, dns2);
+  //   Serial.println("WiFi STATION Failed to configure Correctly"); 
+  // } 
+  // wifiMulti.addAP(ssid_1, password_1);  // add Wi-Fi networks you want to connect to, it connects strongest to weakest
+  // wifiMulti.addAP(ssid_2, password_2);  // Adjust the values in the Network tab
+  // wifiMulti.addAP(ssid_3, password_3);
+  // wifiMulti.addAP(ssid_4, password_4);  // You don't need 4 entries, this is for example!
+  
+  // Serial.println("Connecting ...");
+  // // WiFi.waitForConnectResult()
+  // // wifiMulti.run()
+  // while (wifiMulti.run() != WL_CONNECTED) { // Wait for the Wi-Fi to connect: scan for Wi-Fi networks, and connect to the strongest of the networks above
+  //   delay(250); Serial.print('.');
+  // }
+  // Serial.println("\nConnected to "+WiFi.SSID()+" Use IP address: "+WiFi.localIP().toString()); // Report which SSID and IP is in use
+  // // The logical name http://fileserver.local will also access the device if you have 'Bonjour' running or your system supports multicast dns
+  // if (!MDNS.begin(servername)) {          // Set your preferred server name, if you use "myserver" the address would be http://myserver.local/
+  //   Serial.println(F("Error setting up MDNS responder!")); 
+  //   ESP.restart(); 
+  // }
+
+
   display_Running_Sketch();
 
   // Setup Pins
@@ -81,42 +103,45 @@ void setup() {
   
   // if the switch is indicating that we are in flight mode (that is we were in the middle of a 
   // mission when the power cycled) them attempt to pick up from where we left
-  
-  // if (switchPos(currentAltitude)==FLIGHT) {
-  //   char lineBuf[250];          //For log file
+    FS fs(SD);
+    File logFile;
 
-  //   // open logfile -> dataFile
-  //   if ((File logFile = fs.open(dataFile, FILE_READ))) { 
-    
-  //     // read the last line of the log file to get programState, the timeOffset, 
-  //     // actuator extension, and the start of floating
-  //     while (logFile.available()) {
-  //         logFile.readBytesUntil('\n',lineBuf,150);    
-  //     }
+  if (switchPos(currentAltitude)==FLIGHT) {
+    char lineBuf[250];          //For log file
 
-  //     Serial.println("\n***************************** \n");
-  //     Serial.print("Last Line in Buffer: ");
-  //     Serial.println(lineBuf);
-  //     // we should have the last line now
-  //     sscanf(lineBuf, "%ld %*d %d %f %ld",&timeOffset, &programState, &currentActuatorExtension, &floatStartTime);
-  //     Serial.print("Time Offset: "); Serial.println(timeOffset);
-  //     Serial.print("Program State: "); Serial.println(programState);
-  //     Serial.print("Current Actuator Extension: "); Serial.println(currentActuatorExtension);
-  //     Serial.print("Float Start TIme: "); Serial.println(floatStartTime);
-  //     Serial.println("\n***************************** \n");
+
+    // open logfile -> dataFile
+    if ((logFile = fs.open(dataFile, FILE_READ))) { 
     
-  //     SetStrokePerc(currentActuatorExtension);
-  //   }
-  // }
+      // read the last line of the log file to get programState, the timeOffset, 
+      // actuator extension, and the start of floating
+      while (logFile.available()) {
+          logFile.readBytesUntil('\n',lineBuf,150);    
+      }
+
+      Serial.println("\n***************************** \n");
+      Serial.print("Last Line in Buffer: ");
+      Serial.println(lineBuf);
+      // we should have the last line now
+      sscanf(lineBuf, "%ld %*d %d %f %ld",&timeOffset, &programState, &currentActuatorExtension, &floatStartTime);
+      Serial.print("Time Offset: "); Serial.println(timeOffset);
+      Serial.print("Program State: "); Serial.println(programState);
+      Serial.print("Current Actuator Extension: "); Serial.println(currentActuatorExtension);
+      Serial.print("Float Start TIme: "); Serial.println(floatStartTime);
+      Serial.println("\n***************************** \n");
+    
+      SetStrokePerc(currentActuatorExtension);
+    }
+  }
   
 
   String header = "Current Time,Switch State,Program State,Actuator Extension,Float Start Time,Pressure,Altitude,dAdt,Temp,TeensyTemp";
 ////////////////////////////
 
 
-/*
+
   // open logfile
-  if (!(logFile = SD.open(datafile, FILE_WRITE))) { 
+  if (!(logFile = fs.open(dataFile, FILE_WRITE))) { 
     Serial.println("Failed to open logfile.");
     display.clearDisplay();
     display.setTextSize(2); 
@@ -133,23 +158,25 @@ void setup() {
     { unsigned long size = logFile.size();
       Serial.print("Filesize: "); Serial.println(size);
       if (size == 0){
-        logDataE("Far Horizons | Adler Planetarium");
-        logData("Flight Number: "); logDataE(flightNum);
-        logData("Firmware: "); logDataE(the_sketchname);
-        logData("Compiled on: ");logData(__DATE__); logData(" at "); logDataE(__TIME__);
-        logData("Venting Altitude (m): "); logDataE(VENT_ALT);
-        logData("Float Time (min): "); logDataE(FLOAT_TIME);
-        logData("Max Float Altitutde (m): "); logDataE(MAXFLOATALT);
-        logData("Release Position %: "); logDataE(RELEASE_POS);
-        logData("Venting Position %: "); logDataE(OPEN_POS); logData("Closed Position"); logDataE(CLOSED_POS);
-        logDataE();
-        logDataE(header);
+        String log = 
+        "Far Horizons | Adler Planetarium" + String("\n") + 
+        "Flight Number: " +             String(flightNum) + "\n" + 
+        "Firmware: " +                  String(the_sketchname) + "\n" + 
+        "Compiled on: " +               String(__DATE__) +  " at " +  String(__TIME__) + "\n" +
+        "Venting Altitude (m): " +      String(VENT_ALT) + "\n" + 
+        "Float Time (min): " +          String(FLOAT_TIME) + "\n" + 
+        "Max Float Altitutde (m): " +   String(MAXFLOATALT) + "\n" + 
+        "Release Position %: " +        String(RELEASE_POS) + "\n" + 
+        "Venting Position %: " +        String(OPEN_POS) + "Closed Position" + String(CLOSED_POS);
+        writeFile(SD, dataFile, log);
+        appendFile(SD, dataFile, header);
+        
         Serial.println("LOG FILE CREATED with DEFAULT PARAMETERS");
         delay(500);
       }
 
     }
-*/
+
 ////////////////////////////
   String parameterText = "Venting Alt: " + String(VENT_ALT) + " m" + "\n" + 
                          "Float Time: "  + String(FLOAT_TIME) + " min" + "\n" + 
@@ -160,11 +187,25 @@ void setup() {
   delay(2000);
   
   lastLogTime=-9999;
+  if (switchPos(currentAltitude)==RELEASE) {
+      display.clearDisplay();
+      display.setCursor(16,16);
+      display.println("Button pressed");
+      delay(100);
+      if (WifiSetup == 0){
+        Serial.println("Starting Wifi...");
+        display.println("Starting Wifi...");
+        display.display();
+        // Start_Wifi();
+        WifiSetup = 1;
+        Serial.println("Wifi Started");
+        display.println("Wifi Started");
+        display.display();
+      }
+      server.handleClient();
+  }
   
   Serial.println(header);
-
-  // Prepare_Data();
-  writeFile(SD, dataFile, header);    //In an actual code, this should be used to add the header. It's just a regular output for this test though.
 }
 
 void loop(){
@@ -203,12 +244,15 @@ void loop(){
     String(currentEXT_Temp) + "\n"; // Replace with external Temp sensor Dallas...
     lastLogTime=currentTime;
   
-  // Writes to SD.
+  // Append to SD.
   appendFile(SD, dataFile, dataString);     //Append the contents of the dataString to the end of the file on a new line.
 
   display.clearDisplay();
   display.setCursor(0,20);
   logFileStatus();        // CHECK STATUS OF SD CARD
+
+// Include method to detect switch state, and execute wifi upon specific button press
+//Find Faceplate 4.2 with cutaway pcb
 
   switch (switchState) {
     case(RELEASE):
@@ -216,13 +260,29 @@ void loop(){
         display.println("Press to RELEASE");
         display.setCursor(0,16);
         display.println("Actuator will retreat");
+        
+        // Serial.println("Starting Wifi...");
+        // Start_Wifi();
+        // //WifiSetup = 1;
+        // Serial.println("Wifi Started");
+        // server.handleClient(); 
+
         if (buttonPressed) {
           display.clearDisplay();
           display.setCursor(16,16);
-            display.println("Button pressed");
-            delay(100);
-            buttonPressed=FALSE;
-            SetStrokePerc(RELEASE_POS);
+          display.println("Button pressed");
+          delay(100);
+          buttonPressed=FALSE;
+          SetStrokePerc(RELEASE_POS);
+            // while(RELEASE){
+            //   Serial.println("Starting Wifi...");
+            //   Start_Wifi();
+            //   //WifiSetup = 1;
+            //   Serial.println("Wifi Started");
+            //   server.handleClient();
+            //   switchState = switchPos(currentAltitude);
+
+            // }
         }
         programState=GROUND;
         logFileStatus();        // CHECK STATUS OF SD CARD
@@ -235,6 +295,16 @@ void loop(){
         display.setCursor(0,24);
         display.println("Closing Nozzle...");
         logFileStatus();        // CHECK STATUS OF SD CARD
+        // if (buttonPressed) {
+        //     display.setCursor(0,24); display.println("... Pressed WIFI ON ");
+        //     delay(100);
+        //     Serial.println("Starting Wifi...");
+        //     Start_Wifi();
+        //     //WifiSetup = 1;
+        //     Serial.println("Wifi Started");
+        //     server.handleClient(); 
+        //     buttonPressed=FALSE;         
+        // }
         display.display();
         SetStrokePerc(CLOSED_POS);
         programState=GROUND;

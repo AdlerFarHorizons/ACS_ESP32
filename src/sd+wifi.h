@@ -43,9 +43,10 @@
 // File Name Definition
 const char * dataFile = "/datalog1.csv";
 
-
 // //Prepare the data string.
 String dataString =""; // holds the data to be written to the SD card
+bool sdStatus;
+String SDStatus;
 
 //Prepare the pin for the switch.
 char WifiPin = 2;
@@ -58,19 +59,15 @@ bool   SD_present = false;
 #define SD_CS_pin           5   //Set the CS pin for the SD card.
 
 #define   servername "fileserver"  // Set your server's logical name here e.g. if 'myserver' then address is http://myserver.local/
-IPAddress local_IP(192, 168, 1, 150); // Set your server's fixed IP address here
+IPAddress local_IP(192, 168, 0, 150); // Set your server's fixed IP address here
 IPAddress gateway(192, 168, 0, 1);    // Set your network Gateway usually your Router base address
 IPAddress subnet(255, 255, 255, 0);   // Set your network sub-network mask here
 IPAddress dns(192,168,0,1);           // Set your network DNS usually your Router base address
 
 //Prepare your wifi connection.
-#ifdef ssid.h
-  const char ssid_1[]     = ssid[];
-  const char password_1[] = password[];
-  String exist = "I exist!";
-#else
+
 const char ssid_1[]     = "your_SSID1";                   //Set your SSID here.
-const char password_1[] = "your_PASSWORD_for SSID1";        //And wifi password here.
+const char password_1[] = "your_PASSWORD_for SSID2"; 
 const char ssid_2[]     = "your_SSID2";
 const char password_2[] = "your_PASSWORD_for SSID2";
 const char ssid_3[]     = "your_SSID3";
@@ -78,7 +75,7 @@ const char password_3[] = "your_PASSWORD_for SSID3";
 const char ssid_4[]     = "your_SSID4";
 const char password_4[] = "your_PASSWORD_for SSID4";
 String exist = "I didn't work";
-#endif
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //WEBPAGE FUNCTION/////////////////////////////////////////////////////////////////////////
@@ -396,8 +393,19 @@ void Start_Wifi(){
   wifiMulti.addAP(ssid_4, password_4);  // You don't need 4 entries, this is for example!
   
   Serial.println("Connecting ...");
+  int count = 0;
   while (wifiMulti.run() != WL_CONNECTED) { // Wait for the Wi-Fi to connect: scan for Wi-Fi networks, and connect to the strongest of the networks above
-    delay(250); Serial.print('.');
+    delay(250); Serial.print('.'); count++;
+    if (count > 40){
+      WiFi.disconnect();
+      delay(1);
+      wifiMulti.addAP(ssid_1, password_1);  // add Wi-Fi networks you want to connect to, it connects strongest to weakest
+      wifiMulti.addAP(ssid_2, password_2);  // Adjust the values in the Network tab
+      wifiMulti.addAP(ssid_3, password_3);
+      wifiMulti.addAP(ssid_4, password_4);  // You don't need 4 entries, this is for example!
+      count = 0;
+      Serial.println("reset");
+    }
   }
   Serial.println("\nConnected to "+WiFi.SSID()+" Use IP address: "+WiFi.localIP().toString()); // Report which SSID and IP is in use
   // The logical name http://fileserver.local will also access the device if you have 'Bonjour' running or your system supports multicast dns
@@ -405,22 +413,22 @@ void Start_Wifi(){
     Serial.println(F("Error setting up MDNS responder!")); 
     ESP.restart(); 
   } 
-  #ifdef ESP32
-    // Note: SD_Card readers on the ESP32 will NOT work unless there is a pull-up on MISO, either do this or wire one on (1K to 4K7)
-    Serial.println(MISO);
-    pinMode(19,INPUT_PULLUP);
-  #endif
-  Serial.print(F("Initializing SD card...")); 
-  Serial.print(F("using CHIP Select Pin: ")); Serial.println((SD_CS_pin)); 
-  if (!SD.begin(SD_CS_pin)) { // see if the card is present and can be initialised. Wemos SD-Card CS uses D8 
-    Serial.println(F("Card failed or not present, no SD Card data logging possible..."));
-    SD_present = false; 
-  } 
-  else
-  {
-    Serial.println(F("Card initialised... file access enabled..."));
-    SD_present = true; 
-  }
+  // #ifdef ESP32
+  //   // Note: SD_Card readers on the ESP32 will NOT work unless there is a pull-up on MISO, either do this or wire one on (1K to 4K7)
+  //   Serial.println(MISO);
+  //   pinMode(19,INPUT_PULLUP);
+  // #endif
+  // Serial.print(F("Initializing SD card...")); 
+  // Serial.print(F("using CHIP Select Pin: ")); Serial.println((SD_CS_pin)); 
+  // if (!SD.begin(SD_CS_pin)) { // see if the card is present and can be initialised. Wemos SD-Card CS uses D8 
+  //   Serial.println(F("Card failed or not present, no SD Card data logging possible..."));
+  //   SD_present = false; 
+  // } 
+  // else
+  // {
+  //   Serial.println(F("Card initialised... file access enabled..."));
+  //   SD_present = true; 
+  // }
   // Note: Using the ESP32 and SD_Card readers requires a 1K to 4K7 pull-up to 3v3 on the MISO line, otherwise they do-not function.
   //----------------------------------------------------------------------   
   ///////////////////////////// Server Commands 
@@ -559,7 +567,7 @@ void appendFile(fs::FS &fs, const char * path, String message){
 }
 
 void logFileStatus(){
-  sd_setup();
+  // sd_setup();
   switch (sdStatus){
     case 0:
       SDStatus = "SD-ERR";

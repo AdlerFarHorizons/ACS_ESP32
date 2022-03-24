@@ -1,7 +1,7 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 
-#define ONE_WIRE_BUS 2      // Data wire is plugged into port 2 on the Arduino
+#define ONE_WIRE_BUS 26      // Data wire is plugged into port 2 on the Arduino
 #define TEMPERATURE_PRECISION 16 // Lower resolution
 
 // Setup a oneWire instance to communicate with any OneWire devices (not just Maxim/Dallas temperature ICs)
