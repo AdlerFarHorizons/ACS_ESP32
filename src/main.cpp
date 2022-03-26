@@ -24,7 +24,11 @@
 #include "SoftwareFunctions.h"
 #include "temp.h"
 
+// Set web server port number to 80
+// ESP32WebServer server(80);
+
 String the_sketchname, version;
+
 
 // displays at startup the Sketch running in the Arduino
 void display_Running_Sketch (void){
@@ -46,27 +50,6 @@ void display_Running_Sketch (void){
 
 void setup() {
   Serial.begin(115200);
-  // if (!WiFi.config(local_IP, gateway, subnet, dns)) { //WiFi.config(ip, gateway, subnet, dns1, dns2);
-  //   Serial.println("WiFi STATION Failed to configure Correctly"); 
-  // } 
-  // wifiMulti.addAP(ssid_1, password_1);  // add Wi-Fi networks you want to connect to, it connects strongest to weakest
-  // wifiMulti.addAP(ssid_2, password_2);  // Adjust the values in the Network tab
-  // wifiMulti.addAP(ssid_3, password_3);
-  // wifiMulti.addAP(ssid_4, password_4);  // You don't need 4 entries, this is for example!
-  
-  // Serial.println("Connecting ...");
-  // // WiFi.waitForConnectResult()
-  // // wifiMulti.run()
-  // while (wifiMulti.run() != WL_CONNECTED) { // Wait for the Wi-Fi to connect: scan for Wi-Fi networks, and connect to the strongest of the networks above
-  //   delay(250); Serial.print('.');
-  // }
-  // Serial.println("\nConnected to "+WiFi.SSID()+" Use IP address: "+WiFi.localIP().toString()); // Report which SSID and IP is in use
-  // // The logical name http://fileserver.local will also access the device if you have 'Bonjour' running or your system supports multicast dns
-  // if (!MDNS.begin(servername)) {          // Set your preferred server name, if you use "myserver" the address would be http://myserver.local/
-  //   Serial.println(F("Error setting up MDNS responder!")); 
-  //   ESP.restart(); 
-  // }
-
 
   display_Running_Sketch();
 
@@ -93,6 +76,9 @@ void setup() {
 
   // Setup SD
   sd_setup();
+
+  //Access Point Initialized
+  Start_Wifi();
 
   // Read Parameters File and/or creates param.txt file (with default values) if not present
   readparam(SD);
@@ -187,24 +173,6 @@ void setup() {
   delay(2000);
   
   lastLogTime=-9999;
-  if (switchPos(currentAltitude)==RELEASE) {
-      display.clearDisplay();
-      display.setCursor(16,16);
-      display.println("Button pressed");
-      delay(100);
-      if (WifiSetup == 0){
-        Serial.println("Starting Wifi...");
-        display.println("Starting Wifi...");
-        display.display();
-        // Start_Wifi();
-        WifiSetup = 1;
-        Serial.println("Wifi Started");
-        display.println("Wifi Started");
-        display.display();
-      }
-      server.handleClient();
-  }
-  
   Serial.println(header);
 }
 
@@ -212,7 +180,6 @@ void loop(){
   int switchState;
   long int currentTime;
   float currentPressure,currentTemp,currentAltitude,currentDAdt;
-  Serial.println(exist);
   // get time
   currentTime=millis()+timeOffset;
   
@@ -260,12 +227,6 @@ void loop(){
         display.println("Press to RELEASE");
         display.setCursor(0,16);
         display.println("Actuator will retreat");
-        
-        // Serial.println("Starting Wifi...");
-        // Start_Wifi();
-        // //WifiSetup = 1;
-        // Serial.println("Wifi Started");
-        // server.handleClient(); 
 
         if (buttonPressed) {
           display.clearDisplay();
@@ -274,15 +235,6 @@ void loop(){
           delay(100);
           buttonPressed=FALSE;
           SetStrokePerc(RELEASE_POS);
-            // while(RELEASE){
-            //   Serial.println("Starting Wifi...");
-            //   Start_Wifi();
-            //   //WifiSetup = 1;
-            //   Serial.println("Wifi Started");
-            //   server.handleClient();
-            //   switchState = switchPos(currentAltitude);
-
-            // }
         }
         programState=GROUND;
         logFileStatus();        // CHECK STATUS OF SD CARD
@@ -294,17 +246,30 @@ void loop(){
         display.print("Pres: "); display.println(currentPressure);
         display.setCursor(0,24);
         display.println("Closing Nozzle...");
+        display.println("Press button for WIFI");
         logFileStatus();        // CHECK STATUS OF SD CARD
-        // if (buttonPressed) {
-        //     display.setCursor(0,24); display.println("... Pressed WIFI ON ");
-        //     delay(100);
-        //     Serial.println("Starting Wifi...");
-        //     Start_Wifi();
-        //     //WifiSetup = 1;
-        //     Serial.println("Wifi Started");
-        //     server.handleClient(); 
-        //     buttonPressed=FALSE;         
-        // }
+
+        if (buttonPressed) {
+          display.clearDisplay();
+          display.setCursor(0,0); display.println("WIFI READY ");
+          
+          // Print IP Address on Network
+          Serial.print("WIFI SSID: "); Serial.println(ssid);
+          display.print("SSID: "); display.println(ssid);  
+          display.println();
+          Serial.print("AP IP address: ");  display.print("IP: ");
+          Serial.println(IP);               display.println(IP);
+          display.display();
+          
+          while(switchPos(currentAltitude) == 2){
+            server.handleClient(); 
+            switchState = switchPos(currentAltitude);
+            if (currentTime - lastLogTime > 1){
+              Serial.print("SwitchState: ");Serial.println(switchState);
+            }
+          }
+          buttonPressed=FALSE;
+        }
         display.display();
         SetStrokePerc(CLOSED_POS);
         programState=GROUND;

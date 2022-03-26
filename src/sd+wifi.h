@@ -29,13 +29,11 @@
 #include <ESP32WebServer.h>    // https://github.com/Pedroalbuquerque/ESP32WebServer download and place in your Libraries folder
 #include <ESPmDNS.h>
 
-#ifdef ESP8266
-  ESP8266WiFiMulti wifiMulti; 
-  ESP8266WebServer server(80);
-#else
-  WiFiMulti wifiMulti;
-  ESP32WebServer server(80);
-#endif
+
+
+// Set web server port number to 80
+ESP32WebServer server(80);
+IPAddress IP;
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //VARIABLES////////////////////////////////////////////////////////////////////////////////
@@ -59,22 +57,10 @@ bool   SD_present = false;
 #define SD_CS_pin           5   //Set the CS pin for the SD card.
 
 #define   servername "fileserver"  // Set your server's logical name here e.g. if 'myserver' then address is http://myserver.local/
-IPAddress local_IP(192, 168, 0, 150); // Set your server's fixed IP address here
-IPAddress gateway(192, 168, 0, 1);    // Set your network Gateway usually your Router base address
-IPAddress subnet(255, 255, 255, 0);   // Set your network sub-network mask here
-IPAddress dns(192,168,0,1);           // Set your network DNS usually your Router base address
 
 //Prepare your wifi connection.
-
-const char ssid_1[]     = "your_SSID1";                   //Set your SSID here.
-const char password_1[] = "your_PASSWORD_for SSID2"; 
-const char ssid_2[]     = "your_SSID2";
-const char password_2[] = "your_PASSWORD_for SSID2";
-const char ssid_3[]     = "your_SSID3";
-const char password_3[] = "your_PASSWORD_for SSID3";
-const char ssid_4[]     = "your_SSID4";
-const char password_4[] = "your_PASSWORD_for SSID4";
-String exist = "I didn't work";
+const char* ssid     = "ACS SD-CARD";
+const char* password = "farhorizons";
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -384,53 +370,36 @@ String file_size(int bytes){
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 void Start_Wifi(){
-  if (!WiFi.config(local_IP, gateway, subnet, dns)) { //WiFi.config(ip, gateway, subnet, dns1, dns2);
-    Serial.println("WiFi STATION Failed to configure Correctly"); 
-  } 
-  wifiMulti.addAP(ssid_1, password_1);  // add Wi-Fi networks you want to connect to, it connects strongest to weakest
-  wifiMulti.addAP(ssid_2, password_2);  // Adjust the values in the Network tab
-  wifiMulti.addAP(ssid_3, password_3);
-  wifiMulti.addAP(ssid_4, password_4);  // You don't need 4 entries, this is for example!
+
+  // Connect to Wi-Fi network with SSID and password
+  Serial.print("Setting AP (Access Point)…");
+  // Remove the password parameter, if you want the AP (Access Point) to be open
+  WiFi.softAP(ssid, password);
+
+  IP = WiFi.softAPIP();
+  Serial.print("AP IP address: ");
+  Serial.println(IP);
   
-  Serial.println("Connecting ...");
-  int count = 0;
-  while (wifiMulti.run() != WL_CONNECTED) { // Wait for the Wi-Fi to connect: scan for Wi-Fi networks, and connect to the strongest of the networks above
-    delay(250); Serial.print('.'); count++;
-    if (count > 40){
-      WiFi.disconnect();
-      delay(1);
-      wifiMulti.addAP(ssid_1, password_1);  // add Wi-Fi networks you want to connect to, it connects strongest to weakest
-      wifiMulti.addAP(ssid_2, password_2);  // Adjust the values in the Network tab
-      wifiMulti.addAP(ssid_3, password_3);
-      wifiMulti.addAP(ssid_4, password_4);  // You don't need 4 entries, this is for example!
-      count = 0;
-      Serial.println("reset");
-    }
-  }
-  Serial.println("\nConnected to "+WiFi.SSID()+" Use IP address: "+WiFi.localIP().toString()); // Report which SSID and IP is in use
-  // The logical name http://fileserver.local will also access the device if you have 'Bonjour' running or your system supports multicast dns
-  if (!MDNS.begin(servername)) {          // Set your preferred server name, if you use "myserver" the address would be http://myserver.local/
-    Serial.println(F("Error setting up MDNS responder!")); 
-    ESP.restart(); 
+  server.begin();
+
+  #ifdef ESP32
+    // Note: SD_Card readers on the ESP32 will NOT work unless there is a pull-up on MISO, either do this or wire one on (1K to 4K7)
+    Serial.println(MISO);
+    pinMode(19,INPUT_PULLUP);
+  #endif
+  Serial.print(F("Initializing SD card...")); 
+  Serial.print(F("using CHIP Select Pin: ")); Serial.println((SD_CS_pin)); 
+  if (!SD.begin(SD_CS_pin)) { // see if the card is present and can be initialised. Wemos SD-Card CS uses D8 
+    Serial.println(F("Card failed or not present, no SD Card data logging possible..."));
+    SD_present = false; 
   } 
-  // #ifdef ESP32
-  //   // Note: SD_Card readers on the ESP32 will NOT work unless there is a pull-up on MISO, either do this or wire one on (1K to 4K7)
-  //   Serial.println(MISO);
-  //   pinMode(19,INPUT_PULLUP);
-  // #endif
-  // Serial.print(F("Initializing SD card...")); 
-  // Serial.print(F("using CHIP Select Pin: ")); Serial.println((SD_CS_pin)); 
-  // if (!SD.begin(SD_CS_pin)) { // see if the card is present and can be initialised. Wemos SD-Card CS uses D8 
-  //   Serial.println(F("Card failed or not present, no SD Card data logging possible..."));
-  //   SD_present = false; 
-  // } 
-  // else
-  // {
-  //   Serial.println(F("Card initialised... file access enabled..."));
-  //   SD_present = true; 
-  // }
+  else
+  {
+    Serial.println(F("Card initialised... file access enabled..."));
+    SD_present = true; 
+  }
   // Note: Using the ESP32 and SD_Card readers requires a 1K to 4K7 pull-up to 3v3 on the MISO line, otherwise they do-not function.
-  //----------------------------------------------------------------------   
+  // ----------------------------------------------------------------------   
   ///////////////////////////// Server Commands 
   server.on("/",         HomePage);
   server.on("/download", File_Download);
