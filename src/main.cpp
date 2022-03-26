@@ -1,9 +1,20 @@
-// So far, this code compiles with Pressure code, Actuator, SD + Wifi, reads/writes parameter file. 
-//      reads all variables from sensors, calculates dA/dt, and writes into var = dataString 
-//      and appends to SD Card
+/*
+ACS WIFI on ESP32
 
-// External TEMP has been added and called within setup and loop.
-// TODO: Add Temperature Control for Heating Element
+ 3/26/2022
+WIFI is enabled at startup and can be assessed via Switch State: Closed and Button Press
+SSID has been added: ACS SD-CARD PSWORD: farhorizons
+?? Do we need a Password?
+When Switch State is in Closed Possition, button may be pressed to enter WIFI.
+
+External TEMP has been added and called within setup and loop.
+TODO: Add Temperature Control for Heating Element
+
+So far, this code compiles with Pressure code, Actuator, SD + Wifi, reads/writes parameter file. 
+     reads all variables from sensors, calculates dA/dt, and writes into var = dataString 
+     and appends to SD Card
+
+*/
 
 #include <Arduino.h>
 #include <math.h>             // math .. Pressure Sensor needs this
@@ -23,9 +34,6 @@
 #include "param.h"
 #include "SoftwareFunctions.h"
 #include "temp.h"
-
-// Set web server port number to 80
-// ESP32WebServer server(80);
 
 String the_sketchname, version;
 
@@ -217,9 +225,6 @@ void loop(){
   display.clearDisplay();
   display.setCursor(0,20);
   logFileStatus();        // CHECK STATUS OF SD CARD
-
-// Include method to detect switch state, and execute wifi upon specific button press
-//Find Faceplate 4.2 with cutaway pcb
 
   switch (switchState) {
     case(RELEASE):
