@@ -107,7 +107,7 @@ void setup() {
 
     // open logfile -> dataFile
     if ((logFile = fs.open(dataFile, FILE_READ))) { 
-    
+        Serial.println("Reading LAST LINES on File .......");
       // read the last line of the log file to get programState, the timeOffset, 
       // actuator extension, and the start of floating
       while (logFile.available()) {
@@ -129,11 +129,9 @@ void setup() {
     }
   }
   
-
-  
 ////////////////////////////
 
-
+//   TODO   FIX this section... Check if file exists and report if file exits, otherwise create file and append log parameters.
 
   // open logfile
   if (!(logFile = fs.open(dataFile, FILE_APPEND))) { 
@@ -152,25 +150,32 @@ void setup() {
   else
     { unsigned long size = logFile.size();
       Serial.print("Filesize: "); Serial.println(size);
-      // if (size < 500000){
+      delay(5000);
+      if (size < 500){
+        display.clearDisplay();
+        display.println("Creating new File");
+        display.display();
+        delay(5000);
+
         String log = 
-        "Far Horizons | Adler Planetarium" + String("\n") + 
-        "Flight Number: " + "\t" +            String(flightNum) + "\n" + 
-        "Firmware: " + "\t" +                  String(the_sketchname) + "\n" + 
-        "Compiled on: " +  "\t" +               String(__DATE__) +  " at " +  String(__TIME__) + "\n" +
-        "Venting Altitude (m): " + "\t" +      String(VENT_ALT) + "\n" + 
-        "Float Time (min): " + "\t" +          String(FLOAT_TIME) + "\n" + 
-        "Max Float Altitutde (m): " + "\t" +   String(MAXFLOATALT) + "\n" + 
-        "Release Position %: " + "\t" +        String(RELEASE_POS) + "\n" + 
-        "Venting Position %: " + "\t" +        String(OPEN_POS) + "\t" + "Closed Position" + "\t" + String(CLOSED_POS) + "\n";
+                    "Far Horizons | Adler Planetarium" + String("\n") + 
+                    "Flight Number: " + "," +            String(flightNum) + "\n" + 
+                    "Firmware: " + "," +                  String(the_sketchname) + "\n" + 
+                    "Compiled on: " +  "," +               String(__DATE__) +  " at " +  String(__TIME__) + "\n" +
+                    "Venting Altitude (m): " + "," +      String(VENT_ALT) + "\n" + 
+                    "Float Time (min): " + "," +          String(FLOAT_TIME) + "\n" + 
+                    "Max Float Altitutde (m): " + "," +   String(MAXFLOATALT) + "\n" + 
+                    "Release Position %: " + "," +        String(RELEASE_POS) + "\n" + 
+                    "Venting Position %: " + "," +        String(OPEN_POS) + "," + 
+                    "Closed Position" + "," + String(CLOSED_POS) + "\n";
         // writeFile(SD, dataFile, log);
         appendFile(SD, dataFile, log);
-        header = "Current Time,Switch State,Program State,Actuator Extension,Float Start Time,Pressure,Altitude,dAdt,Temp,TeensyTemp";
+        header = "Current Time,Switch State,Program State,Actuator Extension,Float Start Time,Pressure,Altitude,dAdt,Temp,ExtTemp\n";
         appendFile(SD, dataFile, header);
         
         Serial.println("LOG FILE CREATED with DEFAULT PARAMETERS");
         delay(500);
-      // }
+      }
     }
 
 ////////////////////////////
