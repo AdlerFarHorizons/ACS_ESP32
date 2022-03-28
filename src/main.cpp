@@ -269,9 +269,6 @@ void loop(){
           while(switchPos(currentAltitude) == 2){
             server.handleClient(); 
             switchState = switchPos(currentAltitude);
-            if (currentTime - lastLogTime > 1){
-              Serial.print("SwitchState: ");Serial.println(switchState);
-            }
           }
           buttonPressed=FALSE;
         }
