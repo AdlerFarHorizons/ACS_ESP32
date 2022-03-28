@@ -36,6 +36,7 @@ So far, this code compiles with Pressure code, Actuator, SD + Wifi, reads/writes
 #include "temp.h"
 
 String the_sketchname, version;
+String header;
 
 
 // displays at startup the Sketch running in the Arduino
@@ -129,13 +130,13 @@ void setup() {
   }
   
 
-  String header = "Current Time,Switch State,Program State,Actuator Extension,Float Start Time,Pressure,Altitude,dAdt,Temp,TeensyTemp";
+  
 ////////////////////////////
 
 
 
   // open logfile
-  if (!(logFile = fs.open(dataFile, FILE_WRITE))) { 
+  if (!(logFile = fs.open(dataFile, FILE_APPEND))) { 
     Serial.println("Failed to open logfile.");
     display.clearDisplay();
     display.setTextSize(2); 
@@ -151,24 +152,25 @@ void setup() {
   else
     { unsigned long size = logFile.size();
       Serial.print("Filesize: "); Serial.println(size);
-      if (size == 0){
+      // if (size < 500000){
         String log = 
         "Far Horizons | Adler Planetarium" + String("\n") + 
-        "Flight Number: " +             String(flightNum) + "\n" + 
-        "Firmware: " +                  String(the_sketchname) + "\n" + 
-        "Compiled on: " +               String(__DATE__) +  " at " +  String(__TIME__) + "\n" +
-        "Venting Altitude (m): " +      String(VENT_ALT) + "\n" + 
-        "Float Time (min): " +          String(FLOAT_TIME) + "\n" + 
-        "Max Float Altitutde (m): " +   String(MAXFLOATALT) + "\n" + 
-        "Release Position %: " +        String(RELEASE_POS) + "\n" + 
-        "Venting Position %: " +        String(OPEN_POS) + "Closed Position" + String(CLOSED_POS);
-        writeFile(SD, dataFile, log);
+        "Flight Number: " + "\t" +            String(flightNum) + "\n" + 
+        "Firmware: " + "\t" +                  String(the_sketchname) + "\n" + 
+        "Compiled on: " +  "\t" +               String(__DATE__) +  " at " +  String(__TIME__) + "\n" +
+        "Venting Altitude (m): " + "\t" +      String(VENT_ALT) + "\n" + 
+        "Float Time (min): " + "\t" +          String(FLOAT_TIME) + "\n" + 
+        "Max Float Altitutde (m): " + "\t" +   String(MAXFLOATALT) + "\n" + 
+        "Release Position %: " + "\t" +        String(RELEASE_POS) + "\n" + 
+        "Venting Position %: " + "\t" +        String(OPEN_POS) + "\t" + "Closed Position" + "\t" + String(CLOSED_POS) + "\n";
+        // writeFile(SD, dataFile, log);
+        appendFile(SD, dataFile, log);
+        header = "Current Time,Switch State,Program State,Actuator Extension,Float Start Time,Pressure,Altitude,dAdt,Temp,TeensyTemp";
         appendFile(SD, dataFile, header);
         
         Serial.println("LOG FILE CREATED with DEFAULT PARAMETERS");
         delay(500);
-      }
-
+      // }
     }
 
 ////////////////////////////
