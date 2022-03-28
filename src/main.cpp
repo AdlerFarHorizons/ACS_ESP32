@@ -77,7 +77,7 @@ void setup() {
   pressure_setup();
   
   // EXT Temp Sensor Setup
-  DallasTemperatureSensorSetup();
+  temp_setup();
 
   // Setup Display
   oled_setup();
@@ -192,7 +192,7 @@ void loop(){
   currentTime=millis()+timeOffset;
   
   // get EXT Temp
-  getEXT_TempData();  
+  get_temp();
 
   // get pressure sensor values
   currentPressure= getMedianPressure(&currentTemp);
@@ -216,7 +216,7 @@ void loop(){
     String(currentAltitude) + "," + 
     String(currentDAdt) + "," + 
     String(currentTemp) + "," + 
-    String(currentEXT_Temp) + "\n"; // Replace with external Temp sensor Dallas...
+    String(ext_temp) + "\n"; // Replace with external Temp sensor Dallas...
     lastLogTime=currentTime;
   
   // Append to SD.
