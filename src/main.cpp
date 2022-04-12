@@ -1,10 +1,14 @@
 /*
 ACS WIFI on ESP32
 
+4/11/2022
+- Password removed.
+- Updated WebPage Style
+
  3/26/2022
 WIFI is enabled at startup and can be assessed via Switch State: Closed and Button Press
-SSID has been added: ACS SD-CARD PSWORD: farhorizons
-?? Do we need a Password?
+SSID has been added: ACS SD-CARD PSWORD: xxxxxxx
+?? Do we need a Password? 
 When Switch State is in Closed Possition, button may be pressed to enter WIFI.
 
 External TEMP has been added and called within setup and loop.
@@ -256,9 +260,8 @@ void loop(){
         display.setCursor(0,0);
         display.println("CLOSED POSITION");
         display.print("Pres: "); display.println(currentPressure);
-        display.setCursor(0,24);
         display.println("Closing Nozzle...");
-        display.println("Press button for WIFI");
+        display.println("PRESS BUTTON FOR WIFI");
         logFileStatus();        // CHECK STATUS OF SD CARD
 
         if (buttonPressed) {
@@ -269,7 +272,7 @@ void loop(){
           Serial.print("WIFI SSID: "); Serial.println(ssid);
           display.print("SSID: "); display.println(ssid);  
           display.println();
-          Serial.print("AP IP address: ");  display.print("IP: ");
+          Serial.print("IP address: ");  display.print("IP: ");
           Serial.println(IP);               display.println(IP);
           display.display();
           
