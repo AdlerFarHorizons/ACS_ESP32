@@ -48,19 +48,19 @@ char *triggerDestStateNames[20];
 //////////////////////////////////////////////////////////////////////////////////////////////
 //                                    Switches                                             ///
 //////////////////////////////////////////////////////////////////////////////////////////////
-int switch1 = 12;            //switch pin that starts Flight sequence (red)
-int switch2 = 13;            //middle switch pin that moves actuator into closed position (blue)
-int switch3 = 14;            //switch pin that runs Testing sequence (black)
-int buttonPin = 27;          //button pin
+int switch0 = 27;            //switch pin that starts FLIGHT sequence
+int switch1 = 26;            //middle switch pin that moves actuator into CLOSED position
+int switch2 = 4;             //switch pin that runs RELEASE sequence
+int buttonPin = 16;          //button pin
 boolean buttonPressed;
 
 int switchPos(float currentAltitude) {
   
   if (currentAltitude>2000) return FLIGHT;
 
-  if (digitalRead(switch1) == LOW) return RELEASE; 
-  if (digitalRead(switch2) == LOW) return CLOSED;
-  if (digitalRead(switch3) == LOW) return FLIGHT; 
+  if (digitalRead(switch0) == LOW) return RELEASE; 
+  if (digitalRead(switch1) == LOW) return CLOSED;
+  if (digitalRead(switch2) == LOW) return FLIGHT; 
 
   return -1;
 }

@@ -67,9 +67,9 @@ void setup() {
   display_Running_Sketch();
 
   // Setup Pins
+  pinMode(switch0, INPUT_PULLUP);
   pinMode(switch1, INPUT_PULLUP);
   pinMode(switch2, INPUT_PULLUP);
-  pinMode(switch3, INPUT_PULLUP);
   
   // initialize Pin for the button
   pinMode(buttonPin, INPUT_PULLUP);

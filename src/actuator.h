@@ -5,8 +5,9 @@
 
 // Actuator
 float currentActuatorExtension=50;
-int actuator_pin = 4;       //actuator Pin
-Servo actuator;             //create servo objects to control the linear actuator
+// int actuator_pin = 4;     //actuator Pin On Teensy 3.6
+int actuator_pin = 17;       //actuator Pin On ESP32 DEVKIT V1
+Servo actuator;              //create servo objects to control the linear actuator
 
 void SetStrokePerc(float strokePercentage)
 {

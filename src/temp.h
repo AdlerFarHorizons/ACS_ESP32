@@ -2,7 +2,7 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 
-#define ONE_WIRE_BUS_1 26
+#define ONE_WIRE_BUS_1 25
 OneWire oneWire_in(ONE_WIRE_BUS_1);
 DallasTemperature sensor_inhouse(&oneWire_in);
 
