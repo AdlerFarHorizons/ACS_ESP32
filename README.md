@@ -123,9 +123,30 @@ Above: Schematic capture of the heating element connector. Here the heating elem
 
 Within the void setup() function, ensure that when the sd_setup() does not create a new file each time the boot process occurs. The ACS should conserve and append the currently existing logfile if it exists. If the file does not exist, the code is instructed to write the parameters below:
 
-|                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **else**{ **unsigned** **long** size = logFile.size();  Serial.print(**"Filesize: "**); Serial.println(size);  delay(5000);  **if** (size &lt; 500){    display.clearDisplay();    display.println(**"Creating new File"**);    display.display();    delay(5000);    String log =                **"Far Horizons \| Adler Planetarium"** + String(**"\\n"**) +                **"Flight Number: "** + **","** +            String(flightNum) + **"\\n"** +                 **"Firmware: "** + **","** +                  String(the_sketchname) + **"\\n"** +                 **"Compiled on: "** +  **","** +               String(\_\_DATE\_\_) +  **" at "** +  String(\_\_TIME\_\_) + **"\\n"** +                **"Venting Altitude (m): "** + **","** +      String(VENT_ALT) + **"\\n"** +                 **"Float Time (min): "** + **","** +          String(FLOAT_TIME) + **"\\n"** +                 **"Max Float Altitude (m): "** + **","** +   String(MAXFLOATALT) + **"\\n"** +                 **"Release Position %: "** + **","** +        String(RELEASE_POS) + **"\\n"** +                 **"Venting Position %: "** + **","** +        String(OPEN_POS) + **","** +                 **"Closed Position"** + **","** + String(CLOSED_POS) + **"\\n"**; |
+
+else
+{ unsigned long size = logFile.size();
+  Serial.print("Filesize: "); Serial.println(size);
+  delay(5000);
+  if (size < 500){
+    display.clearDisplay();
+    display.println("Creating new File");
+    display.display();
+    delay(5000);
+
+    String log = 
+                "Far Horizons | Adler Planetarium" + String("\n") + 
+                "Flight Number: " + "," +            String(flightNum) + "\n" + 
+                "Firmware: " + "," +                  String(the_sketchname) + "\n" + 
+                "Compiled on: " +  "," +               String(__DATE__) +  " at " +  String(__TIME__) + "\n" +
+                "Venting Altitude (m): " + "," +      String(VENT_ALT) + "\n" + 
+                "Float Time (min): " + "," +          String(FLOAT_TIME) + "\n" + 
+                "Max Float Altitude (m): " + "," +   String(MAXFLOATALT) + "\n" + 
+                "Release Position %: " + "," +        String(RELEASE_POS) + "\n" + 
+                "Venting Position %: " + "," +        String(OPEN_POS) + "," + 
+                "Closed Position" + "," + String(CLOSED_POS) + "\n";
+                
+                
 
 Currently this section of the code does not work as intended. Instead, the code creates a new file and does not append the parameters found above.
 
