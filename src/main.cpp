@@ -168,7 +168,7 @@ void setup() {
                     "Compiled on: " +  "," +               String(__DATE__) +  " at " +  String(__TIME__) + "\n" +
                     "Venting Altitude (m): " + "," +      String(VENT_ALT) + "\n" + 
                     "Float Time (min): " + "," +          String(FLOAT_TIME) + "\n" + 
-                    "Max Float Altitutde (m): " + "," +   String(MAXFLOATALT) + "\n" + 
+                    "Max Float Altitude (m): " + "," +   String(MAXFLOATALT) + "\n" + 
                     "Release Position %: " + "," +        String(RELEASE_POS) + "\n" + 
                     "Venting Position %: " + "," +        String(OPEN_POS) + "," + 
                     "Closed Position" + "," + String(CLOSED_POS) + "\n";
