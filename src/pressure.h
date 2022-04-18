@@ -41,7 +41,7 @@ float median(float x[],int n) {
 
 void pressure_setup() {
   
-// Disable internal pullups, 10Kohms are on the breakout
+// Disable internal pullups, 10K ohms are on the breakout
 // PORTC |= (1 << 4);
 // PORTC |= (1 << 5);
   
