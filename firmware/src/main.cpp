@@ -1,4 +1,8 @@
 /*
+Altitudde Control System 
+Adler Planetarium | Far Horizons
+
+By: Jesus Garcia
 ACS WIFI on ESP32
 
 4/11/2022
