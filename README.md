@@ -7,7 +7,7 @@ The Altitude Control System has been updated to work with the ESP32 Microcontrol
 
 The [ACS_ESP32 Code](https://github.com/AdlerFarHorizons/ACS_ESP32) has been organized for clarity, usage, and further development. The code now lives publicly within the [Adler Far Horizons GitHub](https://github.com/AdlerFarHorizons). Additionally, the code and the libraries are packaged by the [PlatformIO](https://platformio.org/platformio-ide) package, which runs within [VS Code](https://code.visualstudio.com/), and should be used to maintain and update the code. Cloning the repository from within GitHub will ensure PlatformIO compiles the code properly. 
 
-**![](https://lh4.googleusercontent.com/VOr_KgZr00MRzIDMwjUCEOm4a1e9Y-rEuFOX8q_m2Qh6UUP_i6r4cdt7RppA9evksXh6Mhy3-KavLnoiUJTBSeL9S8vGmpLnPLSDPtDoZ_utGRDkurdfP1ipgVKnsE-Vo4wNQ98Q)**
+![Screen Shot 2022-04-11 at 9 00 22 PM](https://user-images.githubusercontent.com/30634361/164053000-cc401f2f-c379-46b1-a41e-6660c2523336.png)
 
 
 The following are updates to the code:
