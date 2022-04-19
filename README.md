@@ -33,7 +33,7 @@ Within this window you may browse through the content within the SD Card by sele
 
 The use of WIFI is to be able to download the param.txt file, edit it and upload it back into the ACS SD Card. Additionally, one can download the datalog.csv, which contains all the flight ACS data. Ideally, one should not have to remove the SD Card from the board. 
 
-_Note: I’ve noticed that deleting a file via WIFI sends it to the .Trash Folder. It doesn’t fully delete the file. So when the script runs and looks for a file within the list of files, if the file exists within the .Trash folder, then the code will send a True that the file exists. The code either needs a exception to not search within .Trash or a “Permanently Delete” function that deletes the content within .Trash. _
+__Note: I’ve noticed that deleting a file via WIFI sends it to the .Trash Folder. It doesn’t fully delete the file. So when the script runs and looks for a file within the list of files, if the file exists within the .Trash folder, then the code will send a True that the file exists. The code either needs a exception to not search within .Trash or a “Permanently Delete” function that deletes the content within .Trash.__
 
 
 ### Design Files, Notes, and Code
