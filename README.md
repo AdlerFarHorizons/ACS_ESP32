@@ -55,9 +55,8 @@ To compile and upload the script file using Arduino, you must install the ESP32 
 
 Upon Install, select the **DOIT ESP32 DEVKIT V1 **Board from the drop down menu within **Tools/Board/ESP32 Arduino/. **The this dropdown menu is shown below:
 
-**![](https://lh6.googleusercontent.com/_kFKrzMAFXds2ba18bY5IaDNvxRggebDt9xj-rtJn0WOh6LvTkpCSqUdV0bCA5D-mXpEnjwVt6NLFoG2gF00hyCTdZaY4fOtIBXLDIl06hqou-I4Gh8wCQLdviymnrGOm575QcbS)**
+![Screen Shot 2022-04-11 at 8 47 20 PM](https://user-images.githubusercontent.com/30634361/164053393-86a9eb59-fb7a-4669-bc8a-aae3e0dddb41.png)
 
-****
 
 **Printed Circuit Board (PCB)**
 
@@ -68,8 +67,6 @@ In addition to the microcontroller modifications, the PCB now utilizes a few sur
 - **Power**: The previous design used the [LM7805 Voltage Regulator](https://www.sparkfun.com/datasheets/Components/LM7805.pdf) which dropped the 7.2V to 5V using a conventional heat dissipation voltage regulator. This approach worked, but consumed much higher current draw. Therefore, the DC-DC voltage regulator was exchanged for a low-dropout voltage regulator. The selected voltage regulator is now the [MC33269](https://www.onsemi.com/pdf/datasheet/mc33269-d.pdf). 
 - **Logic Level Shifter: The original [4-channel I2C-safe Bi-directional Logic Level Converter - BSS138](https://www.adafruit.com/product/757) has been stripped down to only use 1 of the [BSS138](https://www.onsemi.com/pdf/datasheet/bss138-d.pdf) configured to convert signals from low voltage 3V3 to 5.0 Volts.**
 - **Actuator**: The current actuator is the L12-50-210-6-R, which runs a servo motor to extend the actuator. However, this actuator does not provide feedback positional data, therefore the recommendation is to upgrade the actuator to the [**L12-50-210-6-I**](https://s3.amazonaws.com/actuonix/Actuonix+L12+Datasheet.pdf)**. **The L12-I version contains an integrated microcontroller which allows the user to obtain positional feedback data. 
-
-  
 
 
 **Connection Diagram**
@@ -90,8 +87,6 @@ This board has been prepared to connect to the primary board, but is placed sepa
 - **Connection: The board is connected to the primary one using a 5 Pin [Screw Terminal Block](https://www.pololu.com/product/2493) affixed to the bottom of the board which will allow wires to be led through a hole beneath it on the way to the main board.**
 
 **![](https://lh6.googleusercontent.com/i0KB2U1GQi786iQtHSaZy-ddk3Zv3pPtQQ_pFyo2oJTYZWIr0ot2n-d4BkqI7z3PDKpxytboJKdZvbsOLsbjTsA4rEDEALrGlNwFOGAW2bFgv2ZOo5hGOq7ev7apg0GzySilAuDs)**
-
-
 
 
 ### NEXT TASKS
