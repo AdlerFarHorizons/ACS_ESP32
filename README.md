@@ -11,6 +11,8 @@ The [ACS_ESP32 Code](https://github.com/AdlerFarHorizons/ACS_ESP32) has been org
 
 
 The following are updates to the code:
+<img width="849" alt="Screen Shot 2022-04-12 at 2 57 01 PM" src="https://user-images.githubusercontent.com/30634361/164054003-d7791bfb-dbc8-40f4-b0fc-e223f4062f72.png">
+<img width="1334" alt="Screen Shot 2022-04-12 at 2 59 28 PM" src="https://user-images.githubusercontent.com/30634361/164054009-f17cf91d-d1e8-4d21-9e88-3c921406bacc.png">
 
 - Code has been organized into separate header files (_name_.h) so as to keep all related code for specific peripherals in separate files. This allows the programmer to quickly find specific functions.
 - Wireless file retrieval has been added. The microcontroller will broadcast a hotspot with SSID: “ACS SD-CARD”. The SD Card content can be displayed by entering the IP-ADDRESS: “192.168.4.1” into a web browser after establishing wifi connection. 
@@ -27,7 +29,7 @@ To access wifi settings, 
 
 4. If your connection is established, you should now see a window as shown below: 
 
-![](https://lh3.googleusercontent.com/1RIIhETCsgd1uu1DkK87giPBo_XgOyol-EdeXCVPd9iRJGjhDsVPD6hFuSCJugC-odw2SgYhFw1vIyTiesrnZenyNT-ew4V4eF0WKlwmX6uPVY4TfuS3P8eMGee0YzicEkgNWy98)
+
 
 Within this window you may browse through the content within the SD Card by selecting Directory. If you wish to download a file, you can copy/paste the full name of the file and paste it into the Downloads prompt window. 
 
