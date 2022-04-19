@@ -5,9 +5,14 @@ The Altitude Control System has been updated to work with the ESP32 Microcontrol
 
 **Firmware**
 
-The [ACS_ESP32 Code](https://github.com/AdlerFarHorizons/ACS_ESP32) has been organized for clarity, usage, and further development. The code now lives publicly within the [Adler Far Horizons GitHub](https://github.com/AdlerFarHorizons)**. **Additionally, the code and the libraries are packaged by the [PlatformIO](https://platformio.org/platformio-ide) package, which runs within [VS Code](https://code.visualstudio.com/), and should be used to maintain and update the code. Cloning the repository from within GitHub will ensure PlatformIO compiles the code properly. 
+The [ACS_ESP32 Code](https://github.com/AdlerFarHorizons/ACS_ESP32) has been organized for clarity, usage, and further development. The code now lives publicly within the [Adler Far Horizons GitHub](https://github.com/AdlerFarHorizons). Additionally, the code and the libraries are packaged by the [PlatformIO](https://platformio.org/platformio-ide) package, which runs within [VS Code](https://code.visualstudio.com/), and should be used to maintain and update the code. Cloning the repository from within GitHub will ensure PlatformIO compiles the code properly. 
 
 **![](https://lh4.googleusercontent.com/VOr_KgZr00MRzIDMwjUCEOm4a1e9Y-rEuFOX8q_m2Qh6UUP_i6r4cdt7RppA9evksXh6Mhy3-KavLnoiUJTBSeL9S8vGmpLnPLSDPtDoZ_utGRDkurdfP1ipgVKnsE-Vo4wNQ98Q)**
+
+<p id="gdcalert1" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image1.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert2">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
+
+
+![alt_text](images/image1.png "image_tooltip")
 
 The following are updates to the code:
 
